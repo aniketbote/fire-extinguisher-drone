@@ -2,6 +2,8 @@
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
 #include "Wire.h" // This library allows you to communicate with I2C devices.
+BlynkTimer timer;
+
 
 //DECLARATIONS
 
@@ -14,6 +16,8 @@ int16_t accelerometer_x, accelerometer_y, accelerometer_z, gyro_x, gyro_y, gyro_
 int xAng2,yAng2,zAng2;
 int minVal=265; 
 int maxVal=402;
+int pinValue = 0;
+int timerId;
 int flagx = 0;
 int flagy = 0;
 char high[] = "HIGH";
@@ -86,9 +90,40 @@ Serial.print("Fan3 = same");Serial.println("");
 Serial.print("Fan4 = same");Serial.println(""); 
 }
 
+void one(){
+Serial.println("one");
+Serial.print("Fan1 = ");Serial.println(high);
+Serial.print("Fan2 = ");Serial.println(low);
+Serial.print("Fan3 = ");Serial.println(low);
+Serial.print("Fan4 = ");Serial.println(low); 
+}
+
+void two(){
+Serial.println("two");
+Serial.print("Fan1 = ");Serial.println(low);
+Serial.print("Fan2 = ");Serial.println(high);
+Serial.print("Fan3 = ");Serial.println(low);
+Serial.print("Fan4 = ");Serial.println(low); 
+}
+void three(){
+Serial.println("three");
+Serial.print("Fan1 = ");Serial.println(low);
+Serial.print("Fan2 = ");Serial.println(low);
+Serial.print("Fan3 = ");Serial.println(high);
+Serial.print("Fan4 = ");Serial.println(low); 
+}
+
+void four(){
+Serial.println("four");
+Serial.print("Fan1 = ");Serial.println(low);
+Serial.print("Fan2 = ");Serial.println(low);
+Serial.print("Fan3 = ");Serial.println(low);
+Serial.print("Fan4 = ");Serial.println(high); 
+}
 
 void hover(int x,int y){
-  while(hover_state){
+  flagx = 0;
+  flagy = 0;
   Wire.beginTransmission(MPU_ADDR);
   Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
   Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
@@ -102,11 +137,11 @@ void hover(int x,int y){
   x2= RAD_TO_DEG * (atan2(-yAng2, -zAng2)+PI);
   y2= RAD_TO_DEG * (atan2(-xAng2, -zAng2)+PI);
   z2= RAD_TO_DEG * (atan2(-yAng2, -xAng2)+PI);
- 
+
   Serial.print("AngleX= "); Serial.println(x2);
   Serial.print("AngleY= "); Serial.println(y2);
   Serial.print("AngleZ= "); Serial.println(z2);
-  Serial.println(" ");
+  
 
   if(x2 > 180){
     x2 = 360 - x2;
@@ -119,26 +154,45 @@ void hover(int x,int y){
   int xd,yd;
   xd = x2 - x;
   yd = y2 - y;
-  if(xd < 20 && yd < 20){
+  if(xd <= 20 && yd <= 20){
     constant();
   }
-  else if(xd >20 && yd < 20){
+  else if(xd >20 && yd <= 20){
     if(flagx == 1)
     forward();
     else
     backward();
-    flagx = 0;
   }
-  else if(yd >20 && xd < 20){
+  else if(yd >20 && xd <= 20){
     if(flagy == 1)
     right();
     else
     left();
-    flagy = 0;
   }
-  delay(1000);
+  else if(yd > 20 && xd > 20){
+    if(flagx == 1 && flagy == 1){
+      four();
+    }
+    else if(flagx == 1 && flagy == 0){
+      three();
+    }
+    else if(flagx == 0 && flagy == 1){
+      one();
+    }
+    else if(flagx == 0 && flagy == 0){
+      two();
+    }
   }
+  Serial.println(" ");
 }
+
+void checkLogic() {
+  if (pinValue == 1) {
+    hover(0,0);
+  } else
+    Serial.println("Hover stopped");
+}
+
 
 //SETUP
 void setup()
@@ -215,14 +269,13 @@ BLYNK_WRITE(V5)
 }
 BLYNK_WRITE(V6)  
 {
-  if (param.asInt())
-  {
-    hover_state = true;
-    hover(0,0);
-  } 
-  else {
-    hover_state = false;
-    Serial.println(hover_state);
+  pinValue = param.asInt();
+  if(pinValue == 1){
+  timerId = timer.setInterval(1000L, checkLogic);
+  timer.enable(timerId);
+  }
+  else{
+    timer.disable(timerId);
   }
 }
 
@@ -232,4 +285,5 @@ BLYNK_WRITE(V6)
 void loop()
 {
   Blynk.run();
+  timer.run();
 }
