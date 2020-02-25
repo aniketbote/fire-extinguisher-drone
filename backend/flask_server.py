@@ -17,6 +17,7 @@ CONFIG = {
 }
 
 ##------------------------------------------------------------------------------##
+
 def logincheck(u_email, u_pass):
     fb_pyre = pyrebase.initialize_app(CONFIG)
     auth = fb_pyre.auth()
@@ -57,7 +58,12 @@ def update_db(user_dict):
 
 ##------------------------------------------------------------------------------##
 
-
+@app.route("/forgotpassword", methods = ['POST'])
+def forgotpassword():
+    email = request.form['email']
+    fb_pyre = pyrebase.initialize_app(CONFIG)
+    auth = fb_pyre.auth()
+    auth.send_password_reset_email(email)
 
 
 @app.route("/login", methods = ['POST'])
