@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request
+from flask import Flask, flash, render_template, request,session
 from firebase import firebase
 import pyrebase
 import hashlib
@@ -58,12 +58,18 @@ def update_db(user_dict):
 
 ##------------------------------------------------------------------------------##
 
+@app.route('/')
+def home():
+    return render_template('login.html')
+
+
 @app.route("/forgotpassword", methods = ['POST'])
 def forgotpassword():
     email = request.form['email']
     fb_pyre = pyrebase.initialize_app(CONFIG)
     auth = fb_pyre.auth()
     auth.send_password_reset_email(email)
+
 
 
 @app.route("/login", methods = ['POST'])
@@ -73,10 +79,10 @@ def login():
     valid = logincheck(email, password)
     if valid:
         session['logged_in'] = True
-        return render_template('../frontend/firebird.html')
+        return render_template('firebird.html')
     else:
         flash('Incorrect Username or Password')
-        return render_template('../frontend/loginx.html')
+        return render_template('login.html')
 
 
 @app.route("/signup", methods = ['POST'])
@@ -93,14 +99,17 @@ def signup():
         status = update_db(user)
         if status:
             flash(msg)
-            return render_template('frontend/loginx.html')
+            return render_template('login.html')
         else:
             flash('Error in creating profile')
-            return render_template('frontend/loginx.html')
+            return render_template('signup.html')
     else:
         flash(msg)
-        return render_template('frontend/loginx.html')
+        return render_template('signup.html')
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(100)
-    app.run(host='0.0.0.0', port=4000, debug = True )
+    app.run(host='0.0.0.0', port=5000, debug = True )
+
+# if __name__ == "__main__":
+#     app.run(debug=True)
