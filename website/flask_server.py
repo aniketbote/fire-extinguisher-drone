@@ -60,7 +60,13 @@ def update_db(user_dict):
 
 @app.route('/')
 def home():
+    return render_template('index.html')
+@app.route('/signin')
+def signin():
     return render_template('login.html')
+@app.route('/forgotpass')
+def forgotpass():
+    return render_template('forgotpass.html')
 
 
 @app.route("/forgotpassword", methods = ['POST'])
@@ -69,6 +75,7 @@ def forgotpassword():
     fb_pyre = pyrebase.initialize_app(CONFIG)
     auth = fb_pyre.auth()
     auth.send_password_reset_email(email)
+    return render_template('forgotpass.html')
 
 
 
