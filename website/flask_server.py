@@ -60,12 +60,10 @@ def update_db(user_dict):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
-@app.route('/signin')
-def signin():
-    return render_template('login.html')
-@app.route('/forgotpass')
-def forgotpass():
+    return render_template('accounts.html')
+
+@app.route('/forgotpasspage')
+def forgotpasspage():
     return render_template('forgotpass.html')
 
 
@@ -86,7 +84,7 @@ def login():
     valid = logincheck(email, password)
     if valid:
         session['logged_in'] = True
-        return render_template('firebird.html')
+        return render_template('index.html')
     else:
         flash('Incorrect Username or Password')
         return render_template('login.html')
@@ -109,10 +107,10 @@ def signup():
             return render_template('login.html')
         else:
             flash('Error in creating profile')
-            return render_template('signup.html')
+            return render_template('accounts.html')
     else:
         flash(msg)
-        return render_template('signup.html')
+        return render_template('accounts.html')
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(100)
