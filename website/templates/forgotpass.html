@@ -1,183 +1,97 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title></title>
-    <style>
-
-body{
-        /* color:#6a6f8c; */
-        /* background:#c8c8c8; */
-        font:600 16px/18px 'Open Sans',sans-serif;}
-      *,:after,:before{box-sizing:border-box}
-      .clearfix:after,.clearfix:before{content:'';display:table}
-      .clearfix:after{clear:both;display:block}
-      a{color:inherit;text-decoration:none}
-
-      .login-wrap{
-        top: 50px;
-        width:100%;
-        margin-left: 50%;
-        margin:auto;
-        max-width:525px;
-        min-height:670px;
-        position:relative;
-        background:url(https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg) no-repeat center;
-        box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
-      }
-      .login-html{
-        width:100%;
-        height:100%;
-        position:absolute;
-        padding:40px 70px 50px 70px;
-        background:rgba(40,57,101,.9);
-      }
-      .login-html .sign-in-htm,
-      .login-html .sign-up-htm{
-        top:0;
-        left:0;
-        right:0;
-        bottom:0;
-        position:absolute;
-        transform:rotateY(180deg);
-        backface-visibility:hidden;
-        transition:all .4s linear;
-      }
-      .login-html .sign-in,
-      .login-html .sign-up,
-      .login-form .group .check{
-        display:none;
-      }
-      .login-html .tab,
-      .login-form .group .label,
-      .login-form .group .button{
-        text-transform:uppercase;
-      }
-      .login-html .tab{
-        font-size:22px;
-        margin-right:15px;
-        padding-bottom:5px;
-        margin:0 15px 10px 0;
-        display:inline-block;
-        border-bottom:2px solid transparent;
-      }
-      .login-html .sign-in:checked + .tab,
-      .login-html .sign-up:checked + .tab{
-        color:#fff;
-        border-color:#1161ee;
-      }
-      .login-form{
-        min-height:345px;
-        position:relative;
-        perspective:1000px;
-        transform-style:preserve-3d;
-      }
-      .login-form .group{
-        margin-bottom:15px;
-      }
-      .login-form .group .label,
-      .login-form .group .input,
-      .login-form .group .button{
-        width:100%;
-        color:#fff;
-        display:block;
-      }
-      .login-form .group .input,
-      .login-form .group .button{
-        border:none;
-        padding:15px 20px;
-        border-radius:25px;
-        background:rgba(255,255,255,.1);
-      }
-      .login-form .group input[data-type="password"]{
-        text-security:circle;
-        -webkit-text-security:circle;
-      }
-      .login-form .group .label{
-        color:#aaa;
-        font-size:12px;
-      }
-      .login-form .group .button{
-        background:#1161ee;
-      }
-      .login-form .group label .icon{
-        width:15px;
-        height:15px;
-        border-radius:2px;
-        position:relative;
-        display:inline-block;
-        background:rgba(255,255,255,.1);
-      }
-      .login-form .group label .icon:before,
-      .login-form .group label .icon:after{
-        content:'';
-        width:10px;
-        height:2px;
-        background:#fff;
-        position:absolute;
-        transition:all .2s ease-in-out 0s;
-      }
-      .login-form .group label .icon:before{
-        left:3px;
-        width:5px;
-        bottom:6px;
-        transform:scale(0) rotate(0);
-      }
-      .login-form .group label .icon:after{
-        top:6px;
-        right:0;
-        transform:scale(0) rotate(0);
-      }
-      .login-form .group .check:checked + label{
-        color:#fff;
-      }
-      .login-form .group .check:checked + label .icon{
-        background:#1161ee;
-      }
-      .login-form .group .check:checked + label .icon:before{
-        transform:scale(1) rotate(45deg);
-      }
-      .login-form .group .check:checked + label .icon:after{
-        transform:scale(1) rotate(-45deg);
-      }
-      .login-html .sign-in:checked + .tab + .sign-up + .tab + .login-form .sign-in-htm{
-        transform:rotate(0);
-      }
-      .login-html .sign-up:checked + .tab + .login-form .sign-up-htm{
-        transform:rotate(0);
-      }
-
-      .hr{
-        height:2px;
-        margin:60px 0 50px 0;
-        background:rgba(255,255,255,.2);
-      }
-      .foot-lnk{
-        top: 0px;
-        text-align:center;
-      }
-
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Login Page - FIRE DRONE Template</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
+    />
+    <!-- https://fonts.google.com/specimen/Open+Sans -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/one.css') }}">
+    <!-- https://fontawesome.com/ -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/two.css') }}">
+    <!-- https://getbootstrap.com/ -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/three.css') }}">
+    <!--
+	Product Admin CSS Template
+	https://templatemo.com/tm-524-product-admin
+	-->
   </head>
+
   <body>
-    <div class="login-wrap">
-    	<div class="login-html">
-    		<input id="tab" type="radio" name="tab" class="sign-in" checked><label class="tab">Forgot Password</label>
-    		<div class="login-form">
-            <form action="/forgotpassword" method="POST">
-    				<div class="group">
-    					<label for="user" class="label">Email ID</label>
-    					<input name="email" type="email" class="input">
-    				</div>
-    				<!-- <div class="group">
-    					<label for="pass" class="label">Password</label>
-    					<input name="password" type="password" class="input" data-type="password">
-    				</div> -->
-    				<div class="group">
-    					<input type="submit" class="button" value="Submit">
-    				</div>
-            </form>
+    <div>
+      <nav class="navbar navbar-expand-xl">
+      </nav>
+    </div>
+    <div class="container tm-mt-big tm-mb-big">
+      <div class="row">
+        <div class="col-12 mx-auto tm-login-col">
+          <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+            <div class="row">
+              <div class="col-12 text-center">
+                <h2 class="tm-block-title mb-4">Forgot Password</h2>
+              </div>
             </div>
+            <div class="row mt-2">
+              <div class="col-12">
+                <form action="/forgotpassword" method="POST">
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                      name="email"
+                      type="email"
+                      class="form-control validate"
+                      id="email"
+                      value=""
+                    />
+                  </div>
+                  <div class="form-group mt-4">
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-block text-uppercase"
+                    >
+                      Send
+                    </button>
+                  </div>
+                </form>
+                  <div class="form-group mt-4">
+                    <form action="/login_page">
+                    <button
+                      class="mt-5 btn btn-primary btn-block text-uppercase"
+                    >
+                      Go back to login
+                    </button>
+                    </form>
+                  </div>
+
+                  <!-- <form action="/forgotpasspage">
+                  <button class="mt-5 btn btn-primary btn-block text-uppercase">
+                    Forgot your password?
+                  </button>
+                </form> -->
+
+
+              </div>
             </div>
-            </div>
-            </body>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="tm-footer row tm-mt-small">
+      <div class="col-12 font-weight-light">
+        <p class="text-center text-white mb-0 px-4 small">
+          Copyright &copy; <b>2018</b> All rights reserved.
+
+          Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
+        </p>
+      </div>
+    </footer>
+    <script src="{{ url_for('static',filename='js/jquery-3.3.1.min.js') }}"></script>
+    <!-- https://jquery.com/download/ -->
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    <!-- https://getbootstrap.com/ -->
+  </body>
+</html>

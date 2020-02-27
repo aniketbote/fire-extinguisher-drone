@@ -1,9 +1,9 @@
-from flask import Flask, flash, render_template, request,session
+from flask import Flask, render_template, request,session
 from firebase import firebase
 import pyrebase
 import hashlib
 import os
-from PIL import Image
+import cv2
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'temp'
 #configuration for firebase
@@ -77,7 +77,7 @@ def index_page():
     if session['logged_in']:
         return render_template('index.html')
     else:
-        flash('Please Login')
+        print('Please Login')
         return render_template('login.html')
 
 
@@ -112,7 +112,7 @@ def login():
         print(session)
         return render_template('index.html')
     else:
-        flash('Incorrect Username or Password')
+        print('Incorrect Username or Password')
         return render_template('login.html')
 
 
@@ -122,11 +122,11 @@ def signup():
     user = {}
     temp = request.files['file']
     temp.save(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
-    user['photo'] = Image.open(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
-    # print('\n' * 10)
-    # print(type(temp))
-    # print(temp)
-    # print('\n' * 10)
+    user['photo'] = cv2.imread(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
+    print('\n' * 10)
+    print(type(temp))
+    print(temp)
+    print('\n' * 10)
     user['name'] = request.form['name']
     user['email'] = request.form['email']
     user['title'] = request.form['title']
@@ -137,13 +137,13 @@ def signup():
     if valid:
         status = update_db(user)
         if status:
-            flash(msg)
+            print(msg)
             return render_template('login.html')
         else:
-            flash('Error in creating profile')
+            print('Error in creating profile')
             return render_template('accounts.html')
     else:
-        flash(msg)
+        print(msg)
         return render_template('accounts.html')
 
 if __name__ == "__main__":

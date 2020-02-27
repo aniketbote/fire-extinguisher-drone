@@ -46,6 +46,7 @@
         <div class="row tm-content-row">
           <div class="tm-block-col tm-col-avatar">
             <div class="tm-bg-primary-dark tm-block tm-block-avatar">
+              <form action="/signup" method="post", enctype="multipart/form-data">
               <h2 class="tm-block-title">Change Avatar</h2>
               <div class="tm-avatar-container">
                 <img
@@ -57,17 +58,13 @@
                   <i class="far fa-trash-alt tm-product-delete-icon"></i>
                 </a>
               </div>
-              <form action="/uploadimage" method="POST">
-              <button class="btn btn-primary btn-block text-uppercase">
-                Upload New Photo
-              </button>
-            </form>
+              <input type="file" name="file" value="" class="btn btn-primary btn-block text-uppercase">
+              </input>
             </div>
           </div>
           <div class="tm-block-col tm-col-account-settings">
             <div class="tm-bg-primary-dark tm-block tm-block-settings">
               <h2 class="tm-block-title">Sign Up Page</h2>
-              <form action="" class="tm-signup-form row">
                 <div class="form-group col-lg-6">
                   <label for="name">Account Name</label>
                   <input
@@ -104,8 +101,6 @@
                     class="form-control validate"
                   />
                 </div>
-
-
                 <div class="col-12">
                   <button
                     type="submit"
@@ -114,7 +109,16 @@
                     Create Your Account
                   </button>
                 </div>
-              </form>
+            </form>
+            <form action="/login_page">
+              <div class="col-12">
+                <button
+                  class="mt-5 btn btn-primary btn-block text-uppercase"
+                >
+                  Already a Member ?
+                </button>
+              </div>
+            </form>
             </div>
           </div>
         </div>
