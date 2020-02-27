@@ -3,7 +3,9 @@ from firebase import firebase
 import pyrebase
 import hashlib
 import os
+from PIL import Image
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'temp'
 #configuration for firebase
 CONFIG = {
     "apiKey": "AIzaSyCs1J_PXXG3HEs1B19YVN7Z-d3JESrui3E",
@@ -57,14 +59,36 @@ def update_db(user_dict):
 
 
 ##------------------------------------------------------------------------------##
+##__________________pages__________________________
+@app.route('/login_page')
+def login_page():
+    return render_template('login.html')
 
-@app.route('/')
-def home():
+@app.route('/forgotpass_page')
+def forgotpass_page():
+    return render_template('forgotpass.html')
+
+@app.route('/accounts_page')
+def accounts_page():
     return render_template('accounts.html')
 
-@app.route('/forgotpasspage')
-def forgotpasspage():
-    return render_template('forgotpass.html')
+@app.route('/index_page')
+def index_page():
+    if session['logged_in']:
+        return render_template('index.html')
+    else:
+        flash('Please Login')
+        return render_template('login.html')
+
+
+
+##________________functions________________________
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    session.pop(session['username'])
+    print(session)
+    return render_template('login.html')
 
 
 @app.route("/forgotpassword", methods = ['POST'])
@@ -84,15 +108,25 @@ def login():
     valid = logincheck(email, password)
     if valid:
         session['logged_in'] = True
+        session['username'] = email
+        print(session)
         return render_template('index.html')
     else:
         flash('Incorrect Username or Password')
         return render_template('login.html')
 
 
+
 @app.route("/signup", methods = ['POST'])
 def signup():
     user = {}
+    temp = request.files['file']
+    temp.save(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
+    user['photo'] = Image.open(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
+    # print('\n' * 10)
+    # print(type(temp))
+    # print(temp)
+    # print('\n' * 10)
     user['name'] = request.form['name']
     user['email'] = request.form['email']
     user['title'] = request.form['title']
