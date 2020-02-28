@@ -4,6 +4,8 @@ import pyrebase
 import hashlib
 import os
 import cv2
+import numpy as np
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'temp'
 #configuration for firebase
@@ -19,6 +21,13 @@ CONFIG = {
 }
 
 ##------------------------------------------------------------------------------##
+##__________________________utility functions______________________
+
+def get_image(np_byte, img_size = (300,300,3)):
+    img = np.frombuffer(np_byte, dtype = np.uint8)
+    img = img.reshape(img_size[0],img_size[1], img_size[2])
+    return img
+
 
 def logincheck(u_email, u_pass):
     fb_pyre = pyrebase.initialize_app(CONFIG)
@@ -60,6 +69,10 @@ def update_db(user_dict):
 
 ##------------------------------------------------------------------------------##
 ##__________________pages__________________________
+@app.route('/')
+def home():
+    return render_template('login.html')
+
 @app.route('/login_page')
 def login_page():
     return render_template('login.html')
@@ -82,7 +95,7 @@ def index_page():
 
 
 
-##________________functions________________________
+##________________functional API________________________
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
@@ -122,16 +135,13 @@ def signup():
     user = {}
     temp = request.files['file']
     temp.save(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
-    user['photo'] = cv2.imread(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
-    print('\n' * 10)
-    print(type(temp))
-    print(temp)
-    print('\n' * 10)
+    temp = cv2.imread(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
+    temp = cv2.resize(temp, (300,300))
+    user['photo'] = temp.tolist()
     user['name'] = request.form['name']
     user['email'] = request.form['email']
     user['title'] = request.form['title']
     user['password'] = request.form['password']
-    # update_db(user)
     valid, msg = signupcheck(user)
     print(valid, msg)
     if valid:
@@ -149,6 +159,3 @@ def signup():
 if __name__ == "__main__":
     app.secret_key = os.urandom(100)
     app.run(host='0.0.0.0', port=5000, debug = True )
-
-# if __name__ == "__main__":
-#     app.run(debug=True)
