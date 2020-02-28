@@ -99,7 +99,7 @@ def index_page():
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
-    session.pop(session['username'])
+    session.pop('username')
     print(session)
     return render_template('login.html')
 

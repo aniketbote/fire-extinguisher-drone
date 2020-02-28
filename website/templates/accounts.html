@@ -46,9 +46,10 @@
         <div class="row tm-content-row">
           <div class="tm-block-col tm-col-avatar">
             <div class="tm-bg-primary-dark tm-block tm-block-avatar">
-              <form action="/signup" method="post", enctype="multipart/form-data">
+              <!-- <form action="/signup" method="post", enctype="multipart/form-data"> -->
               <h2 class="tm-block-title">Change Avatar</h2>
               <div class="tm-avatar-container">
+                <form action="/signup" method="post", enctype="multipart/form-data">
                 <img
                   src="{{ url_for('static',filename='img/avatar.png') }}"
                   alt="Avatar"
@@ -59,12 +60,13 @@
                 </a>
               </div>
               <input type="file" name="file" value="" class="btn btn-primary btn-block text-uppercase">
-              </input>
+              </input>  
             </div>
           </div>
           <div class="tm-block-col tm-col-account-settings">
             <div class="tm-bg-primary-dark tm-block tm-block-settings">
               <h2 class="tm-block-title">Sign Up Page</h2>
+              <div class="tm-signup-form row">
                 <div class="form-group col-lg-6">
                   <label for="name">Account Name</label>
                   <input
@@ -105,15 +107,18 @@
                   <button
                     type="submit"
                     class="btn btn-primary btn-block text-uppercase"
+                    style="margin-top:15px; margin-left:15px; width:585px;"
                   >
                     Create Your Account
                   </button>
                 </div>
+              </div>
             </form>
             <form action="/login_page">
               <div class="col-12">
                 <button
-                  class="mt-5 btn btn-primary btn-block text-uppercase"
+                  class="btn btn-primary btn-block text-uppercase"
+                  style="margin-top:15px;"
                 >
                   Already a Member ?
                 </button>
