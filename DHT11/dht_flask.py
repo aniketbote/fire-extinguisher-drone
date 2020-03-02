@@ -8,7 +8,7 @@ temperature = []
 @app.route('/ard', methods = ['POST'])
 def dht_humid():
     content = request.get_json()
-    print (type(content['humid']))
+    humidity = humidity + content['temperature']
     print (type(content['temperature']))
     return 'JSON posted'
 
