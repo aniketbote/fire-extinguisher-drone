@@ -1,6 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-#define WIFI_SSID "OnePlus6"
+#define WIFI_SSID "jio-2g"
 #define WIFI_PASSWORD "aniket12"
 void setup () {
  

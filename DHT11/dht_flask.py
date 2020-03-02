@@ -1,9 +1,15 @@
 from flask import Flask
-
+from flask import request
+#http://192.168.29.242:5000/ard
 app = Flask(__name__)
 
-@app.route('/helloesp')
-def helloHandler():
-    return 'Hello ESP8266, from Flask'
+humidity = []
+temperature = []
+@app.route('/ard', methods = ['POST'])
+def dht_humid():
+    content = request.get_json()
+    print (type(content['humid']))
+    print (type(content['temperature']))
+    return 'JSON posted'
 
-app.run(host='0.0.0.0', port= 8090)
+app.run(host='0.0.0.0', port= 5000, debug = True)
