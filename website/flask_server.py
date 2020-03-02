@@ -6,6 +6,15 @@ import os
 import cv2
 import numpy as np
 
+import io
+import base64
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import multiprocesssing
+# from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+import psutil
+
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'temp'
 #configuration for firebase
@@ -66,6 +75,25 @@ def update_db(user_dict):
         status = True
         return status
 
+def graph_ploting():
+    fig = plt.figure()
+    axis = fig.add_subplot(1, 1, 1)
+    axis.set_title("title")
+    axis.set_xlabel("x-axis")
+    axis.set_ylabel("y-axis")
+    i = 0
+    x, y = [], []
+    while True:
+        x.append(i)
+        y.append(psutil.cpu_percent())
+        axis.plot(x,y, color = 'b')
+        axis.set_xlim(left = max(0, i-50), right = i + 50)
+        time.sleep(0.1)
+        i = i + 1
+
+
+
+
 
 ##------------------------------------------------------------------------------##
 ##__________________pages__________________________
@@ -87,7 +115,7 @@ def accounts_page():
 
 @app.route('/index_page')
 def index_page():
-    if session['logged_in']:
+    if 'username' in session:
         return render_template('index.html')
     else:
         print('Please Login')
@@ -96,6 +124,27 @@ def index_page():
 
 
 ##________________functional API________________________
+
+@app.route("/mytestplot")
+def plotView():
+    # Generate plot
+    p1 = multiprocessing.Process(target=graph_ploting)
+    p1.start()
+
+    # Convert plot to PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+
+    # Encode PNG image to base64 string
+    pngImageB64String = "data:image/png;base64,"
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+
+
+    return render_template("image.html", image=+pngImageB64String)
+
+
+
+
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
