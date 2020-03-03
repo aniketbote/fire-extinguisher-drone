@@ -1,4 +1,4 @@
-//NodeMCU  https://roboindia.com/tutorials/dht11-nodemcu-arduino/
+// NodeMCU  https://roboindia.com/tutorials/dht11-nodemcu-arduino/
 // + --> vin
 // - --> GND
 // out --> D3
@@ -8,8 +8,8 @@
 #include <ArduinoJson.h>
 #include "DHT.h"        // including the library of DHT11 temperature and humidity sensor
 
-#define WIFI_SSID "jio-2g"
-#define WIFI_PASSWORD "aniket12"
+#define WIFI_SSID "VESCAMPUS"
+#define WIFI_PASSWORD "1234@abcd"
 #define DHTTYPE DHT11   // DHT 11
 #define dht_dpin 0
 DHT dht(dht_dpin, DHTTYPE);
@@ -33,13 +33,13 @@ void setup(void)
 
 void loop() {
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
- 
+
     StaticJsonBuffer<300> JSONbuffer;   //Declaring static JSON buffer
     JsonObject& JSONencoder = JSONbuffer.createObject();
 
     JsonArray& humid = JSONencoder.createNestedArray("humid");
     JsonArray& temperature = JSONencoder.createNestedArray("temperature");
-    
+
     int count = 0;
     while(count <=10){
     float h = dht.readHumidity();
@@ -47,7 +47,7 @@ void loop() {
 
     humid.add(h);
     temperature.add(t);
-    count++;  
+    count++;
     }
 
     char JSONmessageBuffer[300];
@@ -61,10 +61,10 @@ void loop() {
 
     int httpCode = http.POST(JSONmessageBuffer);   //Send the request
     String payload = http.getString();                                        //Get the response payload
- 
+
     Serial.println(httpCode);   //Print HTTP return code
     Serial.println(payload);    //Print request response payload
- 
+
     http.end();  //Close connection
 
     } else {
