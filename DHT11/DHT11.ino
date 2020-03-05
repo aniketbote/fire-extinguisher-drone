@@ -8,8 +8,8 @@
 #include <ArduinoJson.h>
 #include "DHT.h"        // including the library of DHT11 temperature and humidity sensor
 
-#define WIFI_SSID "VESCAMPUS"
-#define WIFI_PASSWORD "1234@abcd"
+#define WIFI_SSID "Roshan-moto"
+#define WIFI_PASSWORD "roshan123"
 #define DHTTYPE DHT11   // DHT 11
 #define dht_dpin 0
 DHT dht(dht_dpin, DHTTYPE);
@@ -56,7 +56,7 @@ void loop() {
 
     HTTPClient http;
 
-    http.begin("http://192.168.29.242:5000/ard");      //Specify request destination
+    http.begin("http://192.168.43.184:5000/ard");      //Specify request destination
     http.addHeader("Content-Type", "application/json");  //Specify content-type header
 
     int httpCode = http.POST(JSONmessageBuffer);   //Send the request

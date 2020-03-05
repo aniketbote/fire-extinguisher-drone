@@ -5,7 +5,6 @@ import hashlib
 import os
 import cv2
 import numpy as np
-
 import io
 import base64
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -112,6 +111,10 @@ def forgotpass_page():
 @app.route('/accounts_page')
 def accounts_page():
     return render_template('accounts.html')
+
+@app.route('/account_details_page')
+def account_details_page():
+    return render_template('account_details.html')
 
 @app.route('/index_page')
 def index_page():
