@@ -56,7 +56,11 @@ void loop() {
 
     HTTPClient http;
 
+<<<<<<< HEAD
     http.begin("http://192.168.43.242:5000/ard");      //Specify request destination
+=======
+    http.begin("http://192.168.43.184:5000/ard");      //Specify request destination
+>>>>>>> 0f76fc8d52308d9d7cf2fa5fe776b43f2362a3e8
     http.addHeader("Content-Type", "application/json");  //Specify content-type header
 
     int httpCode = http.POST(JSONmessageBuffer);   //Send the request

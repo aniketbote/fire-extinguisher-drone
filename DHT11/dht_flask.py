@@ -38,5 +38,9 @@ def dht_response():
 def hello():
     return 'It is working'
 
+<<<<<<< HEAD
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port= 5000, debug = True)
+=======
+app.run(host='192.168.43.184', port= 5000, debug = True)
+>>>>>>> 0f76fc8d52308d9d7cf2fa5fe776b43f2362a3e8
