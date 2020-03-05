@@ -16,4 +16,4 @@ while True:
     r = requests.post('http://127.0.0.1:5000/ard', json = pload)
     print(r)
     print('Done')
-    time.sleep(5)
+    # time.sleep(5)
