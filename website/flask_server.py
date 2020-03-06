@@ -5,6 +5,7 @@ import hashlib
 import os
 import time
 import cv2
+import numpy as np
 
 
 
@@ -27,6 +28,7 @@ humidity = []
 temperature = []
 gas = []
 count = 0
+
 
 ##------------------------------------------------------------------------------##
 ##__________________________utility functions______________________
@@ -99,7 +101,11 @@ def accounts_page():
 
 @app.route('/account_details_page')
 def account_details_page():
-    return render_template('account_details.html')
+    if 'username' in session:
+        return render_template('account_details.html')
+    else:
+        print('Please Login')
+        return render_template('login.html')
 
 @app.route('/index_page')
 def index_page():
@@ -146,6 +152,7 @@ def dht_response():
 def logout():
     session['logged_in'] = False
     session.pop('username')
+    os.remove(os.listdir(os.path.join(app.config["UPLOAD_FOLDER"])))
     print(session)
     return render_template('login.html')
 
@@ -205,6 +212,30 @@ def signup():
         flash(msg)
         print(msg)
         return render_template('accounts.html')
+
+
+@app.route('/account_det')
+def account_detail():
+    if 'username' in session:
+        udict = {}
+        fb = firebase.FirebaseApplication('https://firebird-7ef02.firebaseio.com/')
+        email = session['email']
+        res = hashlib.sha256(email.encode())
+        sha_email = res.hexdigest()
+        result = fb.get('/{}'.format(sha_email), None)
+        result = list(result.values())[0]
+        udict['username'] = result['email']
+        udict['name'] = result['name']
+        udict['title'] = result['title']
+        udict['filename'] = 'user_photo.png'
+        cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], 'user_photo.png'), np.asarray(result['photo']))
+        return render_template('account_details.html', user_info = udict)
+    else:
+        print('please login')
+        return render_template('login.html')
+
+
+
 
 @app.route('/hello')
 def hello():
