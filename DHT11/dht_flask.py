@@ -1,6 +1,7 @@
 from flask import Flask
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from collections import deque
+import time
 
 # http://192.168.29.242:5000/ard
 # http://127.0.0.1:5000/hello
@@ -8,8 +9,12 @@ app = Flask(__name__)
 
 humidity = []
 temperature = []
+count = 0
 
 
+@app.route('/', methods=["GET", "POST"])
+def main():
+    return render_template('index.html')
 
 
 @app.route('/ard', methods = ['POST'])
@@ -17,20 +22,24 @@ def dht_humid():
     content = request.get_json()
     humidity.append(content['humid'])
     temperature.append(content['temperature'])
-    print(content)
+    # print(content)
     return 'JSON posted'
 
-@app.route('/take')
+@app.route('/data')
 def dht_response():
-    dtemp = {}
+    global count
+    response = []
+    while len(humidity) == 0:
+        time.sleep(1)
     if len(humidity) != 0:
         htemp = humidity.pop(0)
         ttemp = temperature.pop(0)
-        dtemp['humidity'] = htemp
-        dtemp['temperature'] = ttemp
-        return jsonify(dtemp)
-    else:
-        return 'NULL'
+        response.append(count)
+        response.append(ttemp)
+        response.append(htemp)
+        count += 1
+        print(response)
+        return jsonify(response)
 
 
 
@@ -38,9 +47,6 @@ def dht_response():
 def hello():
     return 'It is working'
 
-<<<<<<< HEAD
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port= 5000, debug = True)
-=======
-app.run(host='192.168.43.184', port= 5000, debug = True)
->>>>>>> 0f76fc8d52308d9d7cf2fa5fe776b43f2362a3e8
