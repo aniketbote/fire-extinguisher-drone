@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, session, jsonify
+from flask import Flask, render_template, request, session, jsonify, flash
 from firebase import firebase
 import pyrebase
 import hashlib
 import os
 import time
+import cv2
 
 
 
@@ -170,6 +171,7 @@ def login():
         print(session)
         return render_template('index.html')
     else:
+        flash('Incorrect Username or Password')
         print('Incorrect Username or Password')
         return render_template('login.html')
 
@@ -192,12 +194,15 @@ def signup():
     if valid:
         status = update_db(user)
         if status:
+            flash(msg)
             print(msg)
             return render_template('login.html')
         else:
+            flash('Error in creating profile')
             print('Error in creating profile')
             return render_template('accounts.html')
     else:
+        flash(msg)
         print(msg)
         return render_template('accounts.html')
 

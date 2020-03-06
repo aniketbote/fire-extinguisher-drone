@@ -58,12 +58,19 @@
                   <i class="far fa-trash-alt tm-product-delete-icon"></i>
                 </a>
               </div>
-              <input type="file" value=""required id="myfile" name="myfile" class="btn btn-primary btn-block text-uppercase">
+              <input type="file" value=""required id="myfile" name="file" class="btn btn-primary btn-block text-uppercase">
             </div>
           </div>
           <div class="tm-block-col tm-col-account-settings">
             <div class="tm-bg-primary-dark tm-block tm-block-settings">
               <h2 class="tm-block-title">Sign Up Page</h2>
+              {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  {% for message in messages %}
+                    {{ message }}
+                    {% endfor %}
+                {% endif %}
+              {% endwith %}
               <div class="tm-signup-form row">
                 <div class="form-group col-lg-6">
                   <label for="name">Account Name</label>
