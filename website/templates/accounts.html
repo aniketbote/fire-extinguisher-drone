@@ -15,10 +15,9 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='css/two.css') }}">
     <!-- https://getbootstrap.com/ -->
     <link rel="stylesheet" href="{{ url_for('static',filename='css/three.css') }}">
-    <!--
-	Product Admin CSS Template
-	https://templatemo.com/tm-524-product-admin
-	-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
   </head>
 
   <body id="reportsPage">
@@ -49,16 +48,15 @@
               <h2 class="tm-block-title">Change Avatar</h2>
               <div class="tm-avatar-container">
                 <form action="/signup" method="post", enctype="multipart/form-data">
-                <img
-                  src="{{ url_for('static',filename='img/avatar.png') }}"
-                  alt="Avatar"
-                  class="tm-avatar img-fluid mb-4"
-                />
+                <img id="blah" src="{{ url_for('static',filename='img/avatar.png') }}" alt="your image" class="tm-avatar img-fluid mb-4" style="height:275px;width:345"/>
                 <a href="#" class="tm-avatar-delete-link">
                   <i class="far fa-trash-alt tm-product-delete-icon"></i>
                 </a>
               </div>
-              <input type="file" value=""required id="myfile" name="file" class="btn btn-primary btn-block text-uppercase">
+              <label for="imgInp" class="btn btn-primary btn-block text-uppercase">
+                Insert Image
+              </label>
+              <input type="file" value=""required id="imgInp" name="file" class="btn btn-primary btn-block text-uppercase" style="display:none;">
             </div>
           </div>
           <div class="tm-block-col tm-col-account-settings">
@@ -128,7 +126,7 @@
               </div>
             </form>
             <form action="/login_page">
-              <div class="col-12">
+                  <div class="col-12">
                 <button
                   class="btn btn-primary btn-block text-uppercase"
                   style="margin-top:15px;"
@@ -141,12 +139,10 @@
           </div>
         </div>
       </div>
-      <footer class="tm-footer row tm-mt-small">
+      <footer class="tm-footer row tm-mt-small" style="margin-top:100px;">
         <div class="col-12 font-weight-light">
           <p class="text-center text-white mb-0 px-4 small">
-            Copyright &copy; <b>2018</b> All rights reserved.
-
-            Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
+            BE PROJECT:FIRE-DRONE MENTOR:RICHARD JOSEPH.
           </p>
         </div>
       </footer>
@@ -156,5 +152,24 @@
     <!-- https://jquery.com/download/ -->
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     <!-- https://getbootstrap.com/ -->
+
+
+    <script type="text/javascript">
+    function readURL(input) {
+   if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+  reader.onload = function(e) {
+    $('#blah').attr('src', e.target.result);
+  }
+
+  reader.readAsDataURL(input.files[0]);
+}
+}
+
+$("#imgInp").change(function() {
+readURL(this);
+});
+    </script>
   </body>
 </html>
