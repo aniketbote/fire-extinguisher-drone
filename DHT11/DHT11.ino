@@ -8,8 +8,8 @@
 #include <ArduinoJson.h>
 #include "DHT.h"        // including the library of DHT11 temperature and humidity sensor
 
-#define WIFI_SSID "Roshan-moto"
-#define WIFI_PASSWORD "roshan123"
+#define WIFI_SSID "jio-2g"
+#define WIFI_PASSWORD "aniket12"
 #define DHTTYPE DHT11   // DHT 11
 #define dht_dpin 0
 DHT dht(dht_dpin, DHTTYPE);
@@ -33,22 +33,30 @@ void setup(void)
 
 void loop() {
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
+    
 
     StaticJsonBuffer<300> JSONbuffer;   //Declaring static JSON buffer
     JsonObject& JSONencoder = JSONbuffer.createObject();
 
     JsonArray& humid = JSONencoder.createNestedArray("humid");
     JsonArray& temperature = JSONencoder.createNestedArray("temperature");
+//    JsonArray& gas = JSONencoder.createNestedArray("gas");
+    
+//    float sensor_volt;
+//    float RS_gas;
+//    float ratio;
+//    float R0 = 0.93;
+//    int sensorValue = analogRead(A0);
+//    sensor_volt = ((float)sensorValue / 1024) * 5.0;
+//    RS_gas = (5.0 - sensor_volt) / sensor_volt;           // Depend on RL on yor module
+//    ratio = RS_gas / R0;                                  // ratio = RS/R0
 
-    int count = 0;
-    while(count <=10){
     float h = dht.readHumidity();
     float t = dht.readTemperature();
 
     humid.add(h);
     temperature.add(t);
-    count++;
-    }
+//    gas.add(ratio)
 
     char JSONmessageBuffer[300];
     JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
@@ -56,11 +64,7 @@ void loop() {
 
     HTTPClient http;
 
-<<<<<<< HEAD
-    http.begin("http://192.168.43.242:5000/ard");      //Specify request destination
-=======
-    http.begin("http://192.168.43.184:5000/ard");      //Specify request destination
->>>>>>> 0f76fc8d52308d9d7cf2fa5fe776b43f2362a3e8
+    http.begin("http://192.168.29.242:5000/ard");      //Specify request destination
     http.addHeader("Content-Type", "application/json");  //Specify content-type header
 
     int httpCode = http.POST(JSONmessageBuffer);   //Send the request
@@ -74,4 +78,5 @@ void loop() {
     } else {
     Serial.println("Error in WiFi connection");
   }
+  delay(1000);
 }

@@ -1,17 +1,10 @@
-from flask import Flask, render_template, request,session
+from flask import Flask, render_template, request, session, jsonify
 from firebase import firebase
 import pyrebase
 import hashlib
 import os
-import cv2
-import numpy as np
-import io
-import base64
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-# import multiprocesssin
-# from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
-import psutil
+import time
+
 
 
 app = Flask(__name__)
@@ -27,6 +20,12 @@ CONFIG = {
     "appId": "1:574864460908:web:c317c3217ae1fcd4899c49",
     "measurementId": "G-15LBYQ506Y"
 }
+
+
+humidity = []
+temperature = []
+gas = []
+count = 0
 
 ##------------------------------------------------------------------------------##
 ##__________________________utility functions______________________
@@ -74,31 +73,16 @@ def update_db(user_dict):
         status = True
         return status
 
-def graph_ploting():
-    fig = plt.figure()
-    axis = fig.add_subplot(1, 1, 1)
-    axis.set_title("title")
-    axis.set_xlabel("x-axis")
-    axis.set_ylabel("y-axis")
-    i = 0
-    x, y = [], []
-    while True:
-        x.append(i)
-        y.append(psutil.cpu_percent())
-        axis.plot(x,y, color = 'b')
-        axis.set_xlim(left = max(0, i-50), right = i + 50)
-        time.sleep(0.1)
-        i = i + 1
-
-
-
-
 
 ##------------------------------------------------------------------------------##
 ##__________________pages__________________________
 @app.route('/')
 def home():
     return render_template('login.html')
+
+@app.route('/index_test')
+def index_test():
+    return render_template('index.html')
 
 @app.route('/login_page')
 def login_page():
@@ -128,24 +112,33 @@ def index_page():
 
 ##________________functional API________________________
 
-@app.route("/mytestplot")
-def plotView():
-    # Generate plot
-    p1 = multiprocessing.Process(target=graph_ploting)
-    p1.start()
 
-    # Convert plot to PNG image
-    pngImage = io.BytesIO()
-    FigureCanvas(fig).print_png(pngImage)
+@app.route('/ard', methods = ['POST'])
+def dht_humid():
+    content = request.get_json()
+    humidity.append(content['humid'][0])
+    temperature.append(content['temperature'][0])
+    gas.append(content['gas'][0])
+    print(content)
+    return 'JSON posted'
 
-    # Encode PNG image to base64 string
-    pngImageB64String = "data:image/png;base64,"
-    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
-
-
-    return render_template("image.html", image=+pngImageB64String)
-
-
+@app.route('/data')
+def dht_response():
+    global count
+    response = []
+    while len(humidity) == 0:
+        time.sleep(1)
+    if len(humidity) != 0:
+        htemp = humidity.pop(0)
+        ttemp = temperature.pop(0)
+        gtemp = gas.pop(0)
+        response.append(count)
+        response.append(ttemp)
+        response.append(htemp)
+        response.append(gtemp)
+        count += 1
+        print(response)
+        return jsonify(response)
 
 
 @app.route("/logout")
@@ -207,6 +200,10 @@ def signup():
     else:
         print(msg)
         return render_template('accounts.html')
+
+@app.route('/hello')
+def hello():
+    return 'It is working'
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(100)

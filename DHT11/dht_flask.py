@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 humidity = []
 temperature = []
+gas = []
 count = 0
 
 
@@ -20,9 +21,10 @@ def main():
 @app.route('/ard', methods = ['POST'])
 def dht_humid():
     content = request.get_json()
-    humidity.append(content['humid'])
-    temperature.append(content['temperature'])
-    # print(content)
+    humidity.append(content['humid'][0])
+    temperature.append(content['temperature'][0])
+    gas.append(content['gas'][0])
+    print(content)
     return 'JSON posted'
 
 @app.route('/data')
@@ -34,9 +36,11 @@ def dht_response():
     if len(humidity) != 0:
         htemp = humidity.pop(0)
         ttemp = temperature.pop(0)
+        gtemp = gas.pop(0)
         response.append(count)
         response.append(ttemp)
         response.append(htemp)
+        response.append(gtemp)
         count += 1
         print(response)
         return jsonify(response)
