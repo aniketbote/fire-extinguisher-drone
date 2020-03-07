@@ -85,7 +85,7 @@
               <div class="tm-avatar-container">
                 <form action="/" method="post", enctype="multipart/form-data">
                 <img
-                  src="{{ url_for('static',filename='img/avatar.png') }}"
+                  src="{{'static/temp/{}'.format(user_info['filename'])}}"
                   alt="Avatar"
                   class="tm-avatar img-fluid mb-4"
                 />
@@ -102,15 +102,15 @@
               <div class="tm-signup-form row">
                 <div class="form-group col-lg-6">
                   <label for="name">Account Name</label>
-                  <div class="form-control validate"><p style="font-size:20px;margin-top:-5px;">Roshan Devadiga</p></div>
+                  <div class="form-control validate"><p style="font-size:20px;margin-top:-5px;">{{user_info['name']}}</p></div>
                 </div>
                 <div class="form-group col-lg-6">
                   <label for="email">Account Email</label>
-                  <div class="form-control validate"><p style="font-size:20px;margin-top:-5px;">rdevadiga004@gmail.com</p></div>
+                  <div class="form-control validate"><p style="font-size:20px;margin-top:-5px;">{{user_info['username']}}</p></div>
                 </div>
                 <div class="form-group col-lg-6">
                   <label for="email">Position</label>
-                  <div class="form-control validate"><p style="font-size:20px;margin-top:-5px;">Student</p></div>
+                  <div class="form-control validate"><p style="font-size:20px;margin-top:-5px;">{{user_info['title']}}</p></div>
                 </div>
               </div>
             </form>
@@ -131,7 +131,7 @@
       <footer class="tm-footer row tm-mt-small" style="margin-top:170px;">
         <div class="col-12 font-weight-light">
           <p class="text-center text-white mb-0 px-4 small">
-            BE PROJECT:FIRE-DRONE MENTOR:RICHARD JOSEPH.
+            MADE BY ROSHAN & ANIKET !!!!!
           </p>
         </div>
       </footer>

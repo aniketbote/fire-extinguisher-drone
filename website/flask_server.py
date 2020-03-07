@@ -10,7 +10,6 @@ import numpy as np
 
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'temp'
 #configuration for firebase
 CONFIG = {
     "apiKey": "AIzaSyCs1J_PXXG3HEs1B19YVN7Z-d3JESrui3E",
@@ -152,7 +151,8 @@ def dht_response():
 def logout():
     session['logged_in'] = False
     session.pop('username')
-    os.remove(os.listdir(os.path.join(app.config["UPLOAD_FOLDER"])))
+    for fname in os.listdir(os.path.join('static', 'temp')):
+        os.remove(os.path.join('static', 'temp', fname))
     print(session)
     return render_template('login.html')
 
@@ -188,8 +188,8 @@ def login():
 def signup():
     user = {}
     temp = request.files['file']
-    temp.save(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
-    temp = cv2.imread(os.path.join(app.config["UPLOAD_FOLDER"], 'temp.png'))
+    temp.save(os.path.join('static', 'temp', 'temp.png'))
+    temp = cv2.imread(os.path.join('static', 'temp','temp.png'))
     temp = cv2.resize(temp, (300,300))
     user['photo'] = temp.tolist()
     user['name'] = request.form['name']
@@ -219,7 +219,7 @@ def account_detail():
     if 'username' in session:
         udict = {}
         fb = firebase.FirebaseApplication('https://firebird-7ef02.firebaseio.com/')
-        email = session['email']
+        email = session['username']
         res = hashlib.sha256(email.encode())
         sha_email = res.hexdigest()
         result = fb.get('/{}'.format(sha_email), None)
@@ -227,8 +227,8 @@ def account_detail():
         udict['username'] = result['email']
         udict['name'] = result['name']
         udict['title'] = result['title']
-        udict['filename'] = 'user_photo.png'
-        cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], 'user_photo.png'), np.asarray(result['photo']))
+        udict['filename'] = '{}.png'.format(udict['name'])
+        cv2.imwrite(os.path.join('static', 'temp', '{}.png'.format(udict['name'])), np.asarray(result['photo']))
         return render_template('account_details.html', user_info = udict)
     else:
         print('please login')
