@@ -44,6 +44,7 @@ def logincheck(u_email, u_pass):
     try:
         signin = auth.sign_in_with_email_and_password(u_email, u_pass)
     except Exception as e:
+        print(e)
         return False
     return True
 
